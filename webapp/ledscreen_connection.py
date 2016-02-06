@@ -1,8 +1,20 @@
 import socket
 import threading
 import time
+import numpy as np
 
 PORT = 2000
+
+
+def screen_mapping(image):
+    screendata = np.zeros(image.shape, dtype=np.uint8)
+    for row in range(screendata.shape[0]):
+        if row % 2:
+            screendata[row] = image[row]
+        else:
+            screendata[row] = image[row, ::-1, :]
+    return screendata
+
 
 class LedScreenConnection(threading.Thread):
     def __init__(self, screen_host):
@@ -38,6 +50,6 @@ class LedScreenConnection(threading.Thread):
             self.connected = False
             print 'connection lost'
 
-    def send_pixels(self, pixels):
+    def send_image(self, image):
         assert self.connected
-        self._socket.send(pixels)
+        self._socket.send(screen_mapping(image).tostring())

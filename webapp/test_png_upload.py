@@ -10,5 +10,5 @@ conn = LedScreenConnection('127.0.0.1')
 
 while not conn.connected:
     time.sleep(0.1)
-conn.send_pixels(img.tostring())
+conn.send_image(img)
 conn.keep_running = False

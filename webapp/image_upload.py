@@ -57,7 +57,7 @@ def upload_file():
     if not screen_connection.connected:
         return redirect(url_for('upload_page'))
 
-    screen_connection.send_pixels(screen_img.tostring())
+    screen_connection.send_image(screen_img)
 
     pngfile = StringIO()
     show_img = cv2.resize(screen_img, (200, 200),
