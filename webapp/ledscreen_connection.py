@@ -25,9 +25,10 @@ class LedScreenConnection(threading.Thread):
                                              socket.SOCK_STREAM)
                 self._socket.connect((self._host, PORT))
             except socket.error:
-                print 'connection failed, retrying in 1s'
-                time.sleep(1)
+                print 'connection failed, retrying in 2s'
+                time.sleep(2)
                 continue
+            print 'connected to led screen'
             self.connected = True
 
             while self.keep_running:
@@ -35,6 +36,7 @@ class LedScreenConnection(threading.Thread):
 
             self._socket.close()
             self.connected = False
+            print 'connection lost'
 
     def send_pixels(self, pixels):
         assert self.connected
