@@ -4,7 +4,7 @@ import numpy as np
 DEFAULT_STEP_SIZE = 3
 DEFAULT_WINDOW_SIZE = (10, 10) # (h,w)
 FONT = cv2.FONT_HERSHEY_SIMPLEX
-FONT_SCALE = 0.38
+FONT_SCALE = 0.35
 
 class ScrollText:
     def __init__(self,
@@ -16,7 +16,7 @@ class ScrollText:
     def create_frames(self, text, color=(255, 255, 255)):
         text_size = cv2.getTextSize(text, FONT, FONT_SCALE, 1)
         img = np.zeros(
-            (12, text_size[0][0] + 2*self._window_size[1], 3),
+            (self._window_size[0], text_size[0][0] + 2*self._window_size[1], 3),
             dtype=np.uint8)
         cv2.putText(img, text, (self._window_size[1], 8), FONT,
                 FONT_SCALE,
