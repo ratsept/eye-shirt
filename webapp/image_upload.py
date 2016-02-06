@@ -4,6 +4,8 @@ import sys
 import cv2
 from PIL import Image
 import numpy as np
+import base64
+from StringIO import StringIO
 
 SCREEN_SIZE = (10, 10)
 
@@ -50,10 +52,22 @@ def upload_file():
         return redirect(url_for('invalid_upload'))
 
     cv2.imwrite('/tmp/uploaded.png', uploaded_img)
-    screen_image = cv2.resize(uploaded_img, SCREEN_SIZE)
-    assert screen_image.shape == SCREEN_SIZE + (3,)
-    screen_connection.send_pixels(screen_image.tostring())
-    return redirect(url_for('upload_page'))
+    screen_img = cv2.resize(uploaded_img, SCREEN_SIZE)
+
+    if not screen_connection.connected:
+        return redirect(url_for('upload_page'))
+
+    screen_connection.send_pixels(screen_img.tostring())
+
+    pngfile = StringIO()
+    show_img = cv2.resize(screen_img, (200, 200),
+                          interpolation=cv2.INTER_NEAREST)
+    Image.fromarray(show_img).save(pngfile, 'PNG')
+
+    return '''
+        <img src="data:image/png;base64,%s"/><br>
+        <a href="/">Upload page</a>
+    ''' % base64.b64encode(pngfile.getvalue())
 
 
 if __name__ == "__main__":
