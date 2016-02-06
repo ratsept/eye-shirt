@@ -17,6 +17,11 @@ NO_CONNECTION_PAGE = '''
 No connection to screen. <a href="/">Retry</a>
 '''
 
+INVALID_UPLOAD = '''
+Uploaded file invalid. <a href="/">Retry</a>
+'''
+
+
 app = Flask(__name__)
 app.config['PROPAGATE_EXCEPTIONS'] = True
 
@@ -31,10 +36,19 @@ def upload_page():
         return NO_CONNECTION_PAGE
 
 
+@app.route('/invalid_upload')
+def invalid_upload():
+    return INVALID_UPLOAD
+
+
 @app.route('/upload', methods=['POST'])
 def upload_file():
     postfile = request.files['file']
-    uploaded_img = np.array(Image.open(postfile))
+    try:
+        uploaded_img = np.array(Image.open(postfile))
+    except:
+        return redirect(url_for('invalid_upload'))
+
     cv2.imwrite('/tmp/uploaded.png', uploaded_img)
     screen_image = cv2.resize(uploaded_img, SCREEN_SIZE)
     assert screen_image.shape == SCREEN_SIZE + (3,)
