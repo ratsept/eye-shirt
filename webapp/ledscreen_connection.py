@@ -82,5 +82,5 @@ class LedScreenConnection(threading.Thread):
 
     def send_image(self, image):
         assert self.connected
-        self._buf = screen_mapping(image)
+        self._buf = screen_mapping((image[:, ::-1, (1, 0, 2)]*0.2).astype(np.uint8))
         self._socket.send(self._buf)

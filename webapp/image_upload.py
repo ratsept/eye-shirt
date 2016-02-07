@@ -7,7 +7,7 @@ import numpy as np
 import base64
 from StringIO import StringIO
 
-SCREEN_SIZE = (10, 10)
+SCREEN_SIZE = (10, 20)
 
 UPLOAD_PAGE = '''
 <p><form action="/upload_image" method=post enctype=multipart/form-data>
@@ -57,7 +57,7 @@ def upload_file():
         return redirect(url_for('invalid_upload'))
 
     cv2.imwrite('/tmp/uploaded.png', uploaded_img)
-    screen_img = cv2.resize(uploaded_img, SCREEN_SIZE)
+    screen_img = cv2.resize(uploaded_img, SCREEN_SIZE[::-1])
 
     if not screen_connection.connected:
         return redirect(url_for('upload_page'))
