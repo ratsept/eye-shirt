@@ -10,9 +10,14 @@ from StringIO import StringIO
 SCREEN_SIZE = (10, 10)
 
 UPLOAD_PAGE = '''
-<form action="/upload" method=post enctype=multipart/form-data>
-<p><input type=file name=file>
+<p><form action="/upload_image" method=post enctype=multipart/form-data>
+<input type=file name=file>
 <input type=submit value=Upload>
+</form></p>
+<p>
+<p><form action="/upload_text" method=post>
+<input type=text name=text> <input type=submit value="show text on screen">
+</form></p>
 '''
 
 NO_CONNECTION_PAGE = '''
@@ -43,7 +48,7 @@ def invalid_upload():
     return INVALID_UPLOAD
 
 
-@app.route('/upload', methods=['POST'])
+@app.route('/upload_image', methods=['POST'])
 def upload_file():
     postfile = request.files['file']
     try:
@@ -68,6 +73,11 @@ def upload_file():
         <img src="data:image/png;base64,%s"/><br>
         <a href="/">Upload page</a>
     ''' % base64.b64encode(pngfile.getvalue())
+
+
+@app.route('/upload_text', methods=['POST'])
+def upload_text():
+    return ''
 
 
 if __name__ == "__main__":
